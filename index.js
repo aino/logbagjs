@@ -2,22 +2,22 @@ var _ = require('underscore')
   , request = require('request')
 
 
-var Logger = function(url, user, log) {
+var levels = ['debug', 'info', 'warning', 'error', 'critical']
+
+
+var Logger = function(url, user, log, minLevel) {
   var L = {}
   L.log = function(level, message, options) {
+    var idx = levels.indexOf(level)
+    if ( !minLevel || idx == -1 || idx >= levels.indexOf(minLevel) ) {
       var form = options || {}
       _.extend(form, { user: user, log: log, level: level, message: message })
-      request({
-          url: url
-        , method: 'POST'
-        , form: form
-      })
+      request({ url: url , method: 'POST' , form: form })
     }
-  L.debug =    function(message, options) { L.log('debug',    message, options) }
-  L.info =     function(message, options) { L.log('info',     message, options) }
-  L.warning =  function(message, options) { L.log('warning',  message, options) }
-  L.error =    function(message, options) { L.log('error',    message, options) }
-  L.critical = function(message, options) { L.log('critical', message, options) }
+  }
+  levels.forEach(function(level) {
+    L[level] = function(message, options) { L.log(level, message, options) }
+  })
   return L
 }
 
