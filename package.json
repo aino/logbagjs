@@ -1,6 +1,6 @@
 {
   "name": "logbag",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cloud logging.",
   "author": "Mikko Hellsing",
   "license": "BSD",
